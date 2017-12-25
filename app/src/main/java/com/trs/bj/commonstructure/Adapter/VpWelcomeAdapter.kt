@@ -37,7 +37,7 @@ class VpWelcomeAdapter : PagerAdapter{
         iv_welcome_item.setImageResource(welcome_image_array[position])
 
         if (position==(welcome_image_array.size-1))
-            view.setOnClickListener(View.OnClickListener {
+            view.setOnClickListener{v->  //lambda表达式
                 if (context is SplashActivity) {
                     val splashActivity = context as SplashActivity
                     val intent = Intent()
@@ -46,7 +46,7 @@ class VpWelcomeAdapter : PagerAdapter{
                     // 获取class是使用::反射
                     splashActivity.startActivity(intent)
                     splashActivity.finish()
-                } })
+                } }
         container!!.addView(view)
         return view
     }

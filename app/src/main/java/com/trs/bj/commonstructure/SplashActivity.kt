@@ -15,34 +15,62 @@ import android.view.View
 import com.trs.bj.commonstructure.Adapter.VpWelcomeAdapter
 import com.trs.bj.commonstructure.Utils.ScreenUtil
 import kotlinx.android.synthetic.main.activity_splash.*
+import java.lang.ref.WeakReference
+import com.trs.bj.commonstructure.SplashActivity.MyHandler
+
+
 
 
 class SplashActivity : AppCompatActivity() {
 
-    private var handler: Handler = @SuppressLint("HandlerLeak")
+/*    private var mHandler: Handler = @SuppressLint("HandlerLeak")
     object : Handler() {     //此处的object 要加，否则无法重写 handlerMessage
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
-                when(msg?.what){
-                    0->{
-                        val intent = Intent()
-                        //获取intent对象
-                        intent.setClass(this@SplashActivity, MainActivity::class.java)  //内部类引用外部类对象
-                        // 获取class是使用::反射
-                        this@SplashActivity.startActivity(intent)
-                        this@SplashActivity.finish()
-                    }
-
+            when (msg?.what) {
+                0 -> {
+                    val intent = Intent()
+                    //获取intent对象
+                    intent.setClass(this@SplashActivity, MainActivity::class.java)  //内部类引用外部类对象
+                    // 获取class是使用::反射
+                    this@SplashActivity.startActivity(intent)
+                    this@SplashActivity.finish()
                 }
 
+            }
+        }
+    }*/
 
+
+    private var mHandler: MyHandler? = null
+    internal class MyHandler(activity: SplashActivity) : Handler() {
+        private val mOuter: WeakReference<SplashActivity>
+
+        init {
+            mOuter = WeakReference<SplashActivity>(activity)
+        }
+
+        override fun handleMessage(msg: Message) {
+            val outer = mOuter.get()
+            if (outer != null) {
+                  when (msg?.what) {
+                    0 -> {
+                        val intent = Intent()
+                        //获取intent对象
+                        intent.setClass(outer, MainActivity::class.java)  //内部类引用外部类对象
+                        // 获取class是使用::反射
+                        outer.startActivity(intent)
+                        outer.finish()
+                    }
+                }
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
+        mHandler =MyHandler(this)
         setFullScreen()
         initWelcomePage()
 
@@ -76,7 +104,7 @@ class SplashActivity : AppCompatActivity() {
             //非第一次，初始化"即时广告"欢迎页面
             iv_welcome.visibility=View.VISIBLE
             vp_first_welcome.visibility=View.GONE
-            handler.sendEmptyMessageDelayed(0,3000)
+            mHandler!!.sendEmptyMessageDelayed(0,3000)
 
         }
 
