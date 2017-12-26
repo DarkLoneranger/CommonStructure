@@ -1,8 +1,8 @@
-package com.trs.bj.commonstructure
+package com.trs.bj.commonstructure.Activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.trs.bj.commonstructure.Utils.SharePreferenceUtil
+import com.trs.bj.commonstructure.R
 
 class MainActivity : AppCompatActivity() {
 

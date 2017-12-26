@@ -1,6 +1,5 @@
-package com.trs.bj.commonstructure
+package com.trs.bj.commonstructure.Activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,7 +12,7 @@ import android.os.Handler
 import android.os.Message
 import android.view.View
 import com.trs.bj.commonstructure.Adapter.VpWelcomeAdapter
-import com.trs.bj.commonstructure.Utils.ScreenUtil
+import com.trs.bj.commonstructure.R
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.lang.ref.WeakReference
 import com.trs.bj.commonstructure.SplashActivity.MyHandler

@@ -7,9 +7,9 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.trs.bj.commonstructure.MainActivity
+import com.trs.bj.commonstructure.Activity.MainActivity
 import com.trs.bj.commonstructure.R
-import com.trs.bj.commonstructure.SplashActivity
+import com.trs.bj.commonstructure.Activity.SplashActivity
 
 /**
  * Created by ZHAO on 2017/12/25.
