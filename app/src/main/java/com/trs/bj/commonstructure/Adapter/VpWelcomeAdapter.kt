@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -17,7 +16,11 @@ import com.trs.bj.commonstructure.SplashActivity
  */
 class VpWelcomeAdapter : PagerAdapter{
     var welcome_image_array: IntArray = intArrayOf(R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4)
+    var context: Context? = null
 
+    constructor(context: Context) {
+        this.context = context
+    }
     override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
         return view==`object`
     }
@@ -27,14 +30,16 @@ class VpWelcomeAdapter : PagerAdapter{
     }
 
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
-        val view = View.inflate(context, R.layout.vp_welcome_item, null)
-        /*val imageView = ImageView(context)
-        val layoutParams = imageView.layoutParams as ViewPager.LayoutParams
-        layoutParams.height=ViewPager.LayoutParams.MATCH_PARENT
-        layoutParams.width=ViewPager.LayoutParams.MATCH_PARENT
-        imageView.layoutParams=layoutParams*/
+/*        val view = View.inflate(context, R.layout.vp_welcome_item, null)
         val iv_welcome_item = view.findViewById<ImageView>(R.id.iv_welcome_item)
-        iv_welcome_item.setImageResource(welcome_image_array[position])
+        iv_welcome_item.setImageResource(welcome_image_array[position])*/
+        val view = ImageView(context)
+        container!!.addView(view)  //必须放在获取LayoutParams之前，不然会报空指针
+        val layoutParams = view.layoutParams as ViewPager.LayoutParams
+        layoutParams.height= ViewPager.LayoutParams.MATCH_PARENT
+        layoutParams.width=ViewPager.LayoutParams.MATCH_PARENT
+        view.layoutParams=layoutParams
+        view.setImageResource(welcome_image_array[position])
 
         if (position==(welcome_image_array.size-1))
             view.setOnClickListener{v->  //lambda表达式
@@ -47,7 +52,7 @@ class VpWelcomeAdapter : PagerAdapter{
                     splashActivity.startActivity(intent)
                     splashActivity.finish()
                 } }
-        container!!.addView(view)
+
         return view
     }
 
@@ -55,8 +60,5 @@ class VpWelcomeAdapter : PagerAdapter{
         if (`object` is View)
             container!!.removeView(`object`)
     }
-    var context: Context?=null
-    constructor(context: Context){
-        this.context=context
-    }
+
 }
