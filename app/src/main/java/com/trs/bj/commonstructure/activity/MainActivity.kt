@@ -1,4 +1,4 @@
-package com.trs.bj.commonstructure.Activity
+package com.trs.bj.commonstructure.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

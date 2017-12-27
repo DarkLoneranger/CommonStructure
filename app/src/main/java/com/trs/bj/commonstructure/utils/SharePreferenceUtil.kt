@@ -1,4 +1,4 @@
-package com.trs.bj.commonstructure.Utils
+package com.trs.bj.commonstructure.utils
 
 import android.content.Context
 import android.content.SharedPreferences
