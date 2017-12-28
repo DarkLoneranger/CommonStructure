@@ -71,7 +71,6 @@ class SplashActivity : AppCompatActivity() {
         mHandler =MyHandler(this)
         setFullScreen()
         initWelcomePage()
-
     }
 
     private fun setFullScreen() {

@@ -1,10 +1,11 @@
 package com.trs.bj.commonstructure.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import android.widget.Toast
+import com.trs.bj.commonstructure.Extension.app
+import com.trs.bj.commonstructure.Extension.toast
 import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
 import com.trs.bj.commonstructure.utils.ToastUtil
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+
 
     }
 
@@ -36,13 +38,14 @@ class MainActivity : AppCompatActivity() {
             setOnItemClickListener(object : RcvHeaderAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, position: Int) {
                         ToastUtil.showSingleLongToast("lalalala"+position)
-
-
+                        this@MainActivity.app().toast("ceshi")
                 }
             })
         }
 
     }
 
+//扩展函数
+ //   fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
 }
