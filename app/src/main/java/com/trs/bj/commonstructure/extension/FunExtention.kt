@@ -1,6 +1,5 @@
-package com.trs.bj.commonstructure.Extension
+package com.trs.bj.commonstructure.extension
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 

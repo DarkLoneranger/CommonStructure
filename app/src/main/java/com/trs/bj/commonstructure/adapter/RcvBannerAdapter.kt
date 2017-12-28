@@ -1,14 +1,11 @@
 package com.trs.bj.commonstructure.adapter
 
 import android.content.Context
-import android.media.Image
-import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
-import kotlinx.android.synthetic.main.iv_test_layout.view.*
 
 /**
  * Created by ZHAO on 2017/12/27.

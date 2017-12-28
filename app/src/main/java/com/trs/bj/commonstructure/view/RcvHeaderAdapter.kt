@@ -19,7 +19,6 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private val ITEM_HEADER = 0
     private val ITEM_NORMAL = 1
 
-    private var headerView: View? = null
     private var headerData: ArrayList<Any>? = null
     private var listData: ArrayList<Any>? = null
 
@@ -31,7 +30,7 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (headerView != null && position == 0) {
+        if (headerData!=null && headerData!!.size>0 && position == 0) {
             return ITEM_HEADER
         } else {
             return ITEM_NORMAL
@@ -39,11 +38,11 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     override fun getItemCount(): Int {
-        return if (headerView == null) (if (listData == null) 0 else listData!!.size) else 1 + (if (listData == null) 0 else listData!!.size)
+        return if (headerData == null && headerData!!.size == 0) (if (listData == null) 0 else listData!!.size) else 1 + (if (listData == null) 0 else listData!!.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        var holder: RecyclerView.ViewHolder? = null
+        var holder: RecyclerView.ViewHolder?
 
         when (viewType) {
             ITEM_HEADER -> {
@@ -59,7 +58,7 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         }
 
-        return holder!!
+        return holder
     }
 
 
@@ -72,7 +71,7 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
             is ItemViewHolder -> {
-                val realPosition = if (headerView == null) position else position - 1
+                val realPosition = if (headerData == null && headerData!!.size == 0) position else position - 1
                 if (listData != null) {
                     onBindItemViewHolder(holder, realPosition, listData)
                 }
@@ -87,21 +86,17 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
 
-    fun setHeaderView(view: View) {
-        this.headerView = view
-    }
+
 
     /**
      * 设置顶部轮播图数据
      */
     fun setHeaderData(headerData: ArrayList<Any>) {
         if (this.headerData == null) {
-            this.headerData = ArrayList<Any>() as ArrayList<Any>
+            this.headerData = ArrayList<Any>()
         }
         this.headerData!!.clear()
-        if (headerData != null) {
-            this.headerData = headerData
-        }
+        this.headerData = headerData
         notifyItemChanged(0)
     }
 
@@ -110,12 +105,10 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     fun refreshListData(listData: ArrayList<Any>) {
         if (this.listData == null) {
-            this.listData = ArrayList<Any>() as ArrayList<Any>
+            this.listData = ArrayList<Any>()
         }
         this.listData?.clear()
-        if (listData != null) {
             this.listData = listData
-        }
         notifyItemRangeChanged(1, listData.size)
         //positionStart Position of the first item that has changed
         //itemCount Number of items that have changed
@@ -126,11 +119,9 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     fun addListData(listData: ArrayList<Any>) {
         if (this.listData == null) {
-            this.listData = ArrayList<Any>() as ArrayList<Any>
+            this.listData = ArrayList<Any>()
         }
-        if (listData != null) {
             this.listData?.addAll(listData)
-        }
         notifyItemRangeChanged(1, listData.size)
     }
 

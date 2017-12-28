@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.trs.bj.commonstructure.Extension.app
-import com.trs.bj.commonstructure.Extension.toast
+import com.trs.bj.commonstructure.extension.app
+import com.trs.bj.commonstructure.extension.toast
 import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
 import com.trs.bj.commonstructure.utils.ToastUtil
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             setHeaderData(headerList)
             refreshListData(headerList)
             addListData(headerList)
-            setHeaderView(View(this@MainActivity))
             setOnItemClickListener(object : RcvHeaderAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, position: Int) {
                         ToastUtil.showSingleLongToast("lalalala"+position)
