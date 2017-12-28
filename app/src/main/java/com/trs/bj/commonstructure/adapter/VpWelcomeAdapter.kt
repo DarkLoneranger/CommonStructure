@@ -30,7 +30,7 @@ class VpWelcomeAdapter : PagerAdapter{
     }
 
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
-/*        val view = View.inflate(context, R.layout.vp_welcome_item, null)
+/*        val view = View.inflate(context, R.layout.vp_item_welcome, null)
         val iv_welcome_item = view.findViewById<ImageView>(R.id.iv_welcome_item)
         iv_welcome_item.setImageResource(welcome_image_array[position])*/
         val view = ImageView(context)

@@ -15,7 +15,6 @@ import com.trs.bj.commonstructure.adapter.VpWelcomeAdapter
 import com.trs.bj.commonstructure.R
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.lang.ref.WeakReference
-import com.trs.bj.commonstructure.SplashActivity.MyHandler
 
 
 
@@ -91,9 +90,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun initWelcomePage() {
-        val value = SharePreferenceUtil.getInstance(this).getValue(SharePreferenceUtil.SPKey.ISFIRST, true)
+        val value = SharePreferenceUtil.getValue(SharePreferenceUtil.SPKey.ISFIRST, true)
         if (value) {
-            SharePreferenceUtil.getInstance(this).setValue(SharePreferenceUtil.SPKey.ISFIRST, false)
+            SharePreferenceUtil.setValue(SharePreferenceUtil.SPKey.ISFIRST, false)
             //第一次，初始化"功能介绍"欢迎页面
             iv_welcome.visibility = View.GONE
             vp_first_welcome.visibility = View.VISIBLE
