@@ -1,22 +1,18 @@
 package com.trs.bj.commonstructure.activity
 
 import android.content.Intent
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.trs.bj.commonstructure.utils.SharePreferenceUtil
-import android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
-import android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.trs.bj.commonstructure.adapter.VpWelcomeAdapter
+import android.view.View.*
 import com.trs.bj.commonstructure.R
+import com.trs.bj.commonstructure.adapter.VpWelcomeAdapter
+import com.trs.bj.commonstructure.utils.SharePreferenceUtil
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.lang.ref.WeakReference
-
-
 
 
 class SplashActivity : AppCompatActivity() {
@@ -41,6 +37,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     private var mHandler: MyHandler? = null
+
     internal class MyHandler(activity: SplashActivity) : Handler() {
         private val mOuter: WeakReference<SplashActivity>
 
@@ -51,7 +48,7 @@ class SplashActivity : AppCompatActivity() {
         override fun handleMessage(msg: Message) {
             val outer = mOuter.get()
             if (outer != null) {
-                  when (msg?.what) {
+                when (msg?.what) {
                     0 -> {
                         val intent = Intent()
                         //获取intent对象
@@ -68,7 +65,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        mHandler =MyHandler(this)
+        mHandler = MyHandler(this)
         setFullScreen()
         initWelcomePage()
     }
@@ -96,15 +93,16 @@ class SplashActivity : AppCompatActivity() {
             iv_welcome.visibility = View.GONE
             vp_first_welcome.visibility = View.VISIBLE
             val vpWelcomeAdapter = VpWelcomeAdapter(this)
-            vp_first_welcome.adapter= vpWelcomeAdapter
+            vp_first_welcome.adapter = vpWelcomeAdapter
         } else {
             //非第一次，初始化"即时广告"欢迎页面
-            iv_welcome.visibility=View.VISIBLE
-            vp_first_welcome.visibility=View.GONE
-            mHandler!!.sendEmptyMessageDelayed(0,3000)
+            iv_welcome.visibility = View.VISIBLE
+            vp_first_welcome.visibility = View.GONE
+            mHandler!!.sendEmptyMessageDelayed(0, 3000)
 
         }
 
     }
+
 
 }

@@ -34,7 +34,7 @@ class RcvBannerAdapter : RcvHeaderAdapter {
             ivpBannerAdapter.setData(headerData!!)
             holder.ivp_test as InfiniteViewPager
             holder.ivp_test!!.adapter= ivpBannerAdapter
-            holder.ivp_test!!.setCurrentItem(0)
+            holder.ivp_test!!.setCurrentItem(0,true)
         }
     }
 
