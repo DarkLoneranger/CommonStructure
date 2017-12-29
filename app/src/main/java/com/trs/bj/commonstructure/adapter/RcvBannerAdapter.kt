@@ -1,10 +1,13 @@
 package com.trs.bj.commonstructure.adapter
 
 import android.content.Context
+import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.trs.bj.commonstructure.R
+import com.trs.bj.commonstructure.view.InfiniteViewPager
+import com.trs.bj.commonstructure.view.InfiniteViewPagerAdapter
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
 
 /**
@@ -16,7 +19,7 @@ class RcvBannerAdapter : RcvHeaderAdapter {
         this.context=context
     }
     override fun bindHeaderLayoutResource(): HeaderViewHolder {
-        val view = View.inflate(context, R.layout.iv_test_layout, null)
+        val view = View.inflate(context, R.layout.ivp_test_layout, null)
         return BannerHeaderHolder(view)
     }
 
@@ -27,7 +30,11 @@ class RcvBannerAdapter : RcvHeaderAdapter {
 
     override fun onBindHeaderViewHolder(holder: HeaderViewHolder?, headerData: ArrayList<Any>?) {
         if (holder is BannerHeaderHolder){
-            holder.iv_test!!.setImageResource(R.mipmap.guide_1)
+            val ivpBannerAdapter = IvpBannerAdapter(context!!)
+            ivpBannerAdapter.setData(headerData!!)
+            holder.ivp_test as InfiniteViewPager
+            holder.ivp_test!!.adapter= ivpBannerAdapter
+            holder.ivp_test!!.setCurrentItem(0)
         }
     }
 
@@ -39,12 +46,11 @@ class RcvBannerAdapter : RcvHeaderAdapter {
 
 
     class BannerHeaderHolder(view: View) : RcvHeaderAdapter.HeaderViewHolder(view) {
-    //    var vp_banner :ViewPager ?= null
-        var iv_test :ImageView ?= null
+        var ivp_test : InfiniteViewPager?= null
         override fun initView(view: View) {
             super.initView(view)
-            val iv_test = view.findViewById<ImageView>(R.id.iv_test)
-            this.iv_test=iv_test
+            val ivp_test = view.findViewById<InfiniteViewPager>(R.id.ivp_test)
+            this.ivp_test= ivp_test
         }
 
 

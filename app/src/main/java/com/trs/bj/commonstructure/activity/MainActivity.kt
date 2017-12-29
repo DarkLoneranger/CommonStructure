@@ -30,10 +30,12 @@ class MainActivity : AppCompatActivity() {
 
         rcvBannerAdapter.run {
             val headerList: ArrayList<Any>
-            headerList= arrayListOf("lalala1", "lalala2", "lalala3", "lalala4", "lalala5")
+            headerList= arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4, R.mipmap.guide)
             setHeaderData(headerList)
-            refreshListData(headerList)
-            addListData(headerList)
+            val dataList: ArrayList<Any>
+            dataList= arrayListOf("lalala1", "lalala2", "lalala3", "lalala4", "lalala5")
+            refreshListData(dataList)
+            addListData(dataList)
             setOnItemClickListener(object : RcvHeaderAdapter.OnItemClickListener{
                 override fun onItemClick(v: View, position: Int) {
                         ToastUtil.showSingleLongToast("lalalala"+position)

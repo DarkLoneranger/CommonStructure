@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">CommonStructure</string>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="app_name">Kotlin实战</string>
 </resources>
