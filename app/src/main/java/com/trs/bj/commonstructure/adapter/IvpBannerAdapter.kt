@@ -15,6 +15,8 @@ class IvpBannerAdapter : InfiniteViewPagerAdapter {
 
     constructor(context: Context, viewPager: ViewPager):super(viewPager) {
         this.context = context
+        this.setScrollDuration(500)
+        this.shownDuration=3000
     }
 
     override fun getItemView(position: Int): View {
