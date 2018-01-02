@@ -1,10 +1,10 @@
 package com.trs.bj.commonstructure.adapter
 
 import android.content.Context
+import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.ImageView
 import com.trs.bj.commonstructure.R
-import com.trs.bj.commonstructure.view.InfiniteViewPager
 import com.trs.bj.commonstructure.view.InfiniteViewPagerAdapter
 
 /**
@@ -13,7 +13,7 @@ import com.trs.bj.commonstructure.view.InfiniteViewPagerAdapter
 class IvpBannerAdapter : InfiniteViewPagerAdapter {
     private var context: Context?
 
-    constructor(context: Context) {
+    constructor(context: Context, viewPager: ViewPager):super(viewPager) {
         this.context = context
     }
 

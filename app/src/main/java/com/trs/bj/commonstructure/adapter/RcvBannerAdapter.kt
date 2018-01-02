@@ -3,11 +3,8 @@ package com.trs.bj.commonstructure.adapter
 import android.content.Context
 import android.support.v4.view.ViewPager
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import com.trs.bj.commonstructure.R
-import com.trs.bj.commonstructure.view.InfiniteViewPager
-import com.trs.bj.commonstructure.view.InfiniteViewPagerAdapter
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
 
 /**
@@ -30,11 +27,10 @@ class RcvBannerAdapter : RcvHeaderAdapter {
 
     override fun onBindHeaderViewHolder(holder: HeaderViewHolder?, headerData: ArrayList<Any>?) {
         if (holder is BannerHeaderHolder){
-            val ivpBannerAdapter = IvpBannerAdapter(context!!)
+            val ivpBannerAdapter = IvpBannerAdapter(context!!, holder.ivp_test!!)
             ivpBannerAdapter.setData(headerData!!)
-            holder.ivp_test as InfiniteViewPager
             holder.ivp_test!!.adapter= ivpBannerAdapter
-            holder.ivp_test!!.setCurrentItem(0,true)
+         //   holder.ivp_test!!.setCurrentItem(0,true)
         }
     }
 
@@ -46,10 +42,10 @@ class RcvBannerAdapter : RcvHeaderAdapter {
 
 
     class BannerHeaderHolder(view: View) : RcvHeaderAdapter.HeaderViewHolder(view) {
-        var ivp_test : InfiniteViewPager?= null
+        var ivp_test : ViewPager?= null
         override fun initView(view: View) {
             super.initView(view)
-            val ivp_test = view.findViewById<InfiniteViewPager>(R.id.ivp_test)
+            val ivp_test = view.findViewById<ViewPager>(R.id.ivp_test)
             this.ivp_test= ivp_test
         }
 
