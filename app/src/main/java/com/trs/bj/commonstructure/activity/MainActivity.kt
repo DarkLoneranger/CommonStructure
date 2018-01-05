@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         //   rcv_header.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false) //最后一个参数表示是否从后往前
+     //   rcv_header.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true) //最后一个参数表示是否从后往前
         rcv_header.layoutManager = LinearLayoutManager(this) //最后一个参数表示是否从后往前
         val rcvBannerAdapter = RcvBannerAdapter(this)
         rcv_header.adapter= rcvBannerAdapter

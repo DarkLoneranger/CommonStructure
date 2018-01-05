@@ -8,7 +8,7 @@ import com.trs.bj.commonstructure.app.App
  * Created by ZHAO on 2017/12/22.
  */
 
-class SharePreferenceUtil{
+class SharePreferenceUtil private constructor() {
 
     enum class SPKey {
         ISFIRST

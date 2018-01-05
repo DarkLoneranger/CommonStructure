@@ -15,7 +15,7 @@ class App : Application() {  //应用名字需要在清单文件中配置
 
     companion object {
         lateinit var instance: App
-            private set
+            private set  //设置set方法私有
     }
 
 
