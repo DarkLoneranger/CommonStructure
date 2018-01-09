@@ -1,5 +1,6 @@
 package com.trs.bj.commonstructure.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 
 import android.os.Handler
@@ -12,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Interpolator
 import android.widget.Scroller
-import com.trs.bj.commonstructure.R.id.scroll
 
 /**
  * Created by ZHAO on 2017/12/28.
@@ -27,7 +27,8 @@ abstract class InfiniteViewPagerAdapter : PagerAdapter, ViewPager.OnPageChangeLi
 
     }
 
-    val handler: Handler = object : Handler() {
+    val handler: Handler = @SuppressLint("HandlerLeak")
+    object : Handler() {
 
         override fun handleMessage(msg: Message) {         // handle message
             mViewPager!!.setCurrentItem((mViewPager!!.currentItem) + 1, true)
@@ -61,7 +62,7 @@ abstract class InfiniteViewPagerAdapter : PagerAdapter, ViewPager.OnPageChangeLi
         }
     }
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
 
@@ -69,18 +70,18 @@ abstract class InfiniteViewPagerAdapter : PagerAdapter, ViewPager.OnPageChangeLi
         return Int.MAX_VALUE
     }
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container!!.removeView(`object` as View)
     }
 
-    override fun instantiateItem(container: ViewGroup?, position: Int): Any? {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
         if (dataList != null && dataList!!.size > 0) {
             var realPosition = position % dataList!!.size
             var itemView = getItemView(realPosition)
             container!!.addView(itemView)
             return itemView
         }
-        return null
+        return super.instantiateItem(container, position);
 
 
     }

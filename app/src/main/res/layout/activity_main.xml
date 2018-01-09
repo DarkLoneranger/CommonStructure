@@ -6,9 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.trs.bj.commonstructure.activity.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_header"
+    <com.trs.bj.commonstructure.view.SuperSwipeRefreshLayout
+        android:id="@+id/swrl_newslist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </com.trs.bj.commonstructure.view.SuperSwipeRefreshLayout>
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,9 @@
 package com.trs.bj.commonstructure.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -23,31 +26,89 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        //   rcv_header.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false) //最后一个参数表示是否从后往前
-     //   rcv_header.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true) //最后一个参数表示是否从后往前
-        rcv_header.layoutManager = LinearLayoutManager(this) //最后一个参数表示是否从后往前
-        val rcvBannerAdapter = RcvBannerAdapter(this)
-        rcv_header.adapter= rcvBannerAdapter
-
-        rcvBannerAdapter.run {
-            val headerList: ArrayList<Any>
-            headerList= arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4, R.mipmap.guide)
-            setHeaderData(headerList)
-            val dataList: ArrayList<Any>
-            dataList= arrayListOf("lalala1", "lalala2", "lalala3", "lalala4", "lalala5")
-            refreshListData(dataList)
-            addListData(dataList)
-            setOnItemClickListener(object : RcvHeaderAdapter.OnItemClickListener{
-                override fun onItemClick(v: View, position: Int) {
-                        ToastUtil.showSingleLongToast("lalalala"+position)
-                        this@MainActivity.app().toast("ceshi")
-                }
-            })
-        }
+        initRefreshLayout()
+        initRecyclerView()
 
     }
 
+    private fun initRecyclerView() {
+        //   rcv_header.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false) //最后一个参数表示是否从后往前
+        //   rcv_header.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true) //最后一个参数表示是否从后往前
+        rcv_header.layoutManager = LinearLayoutManager(this) //最后一个参数表示是否从后往前
+        val rcvBannerAdapter = RcvBannerAdapter(this)
+        rcv_header.adapter = rcvBannerAdapter
+        rcvBannerAdapter.run {
+            val headerList: ArrayList<Any>
+            headerList = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4, R.mipmap.guide)
+            setHeaderData(headerList)
+            val dataList: ArrayList<Any>
+            dataList = arrayListOf("lalala1", "lalala2", "lalala3", "lalala4", "lalala5")
+            refreshListData(dataList)
+            addListData(dataList)
+            setOnItemClickListener(object : RcvHeaderAdapter.OnItemClickListener {
+                override fun onItemClick(v: View, position: Int) {
+                    ToastUtil.showSingleLongToast("lalalala" + position)
+                    this@MainActivity.app().toast("ceshi")
+                }
+            })
+        }
+    }
+
+    private fun initRefreshLayout() {
+     /*   swrl_newslist.setOnPullRefreshListener(object : SuperSwipeRefreshLayout.OnPullRefreshListener {
+            override fun onRefresh() {
+                Log.e("test", "onrefresh")
+                mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }
+            }
+
+            override fun onPullEnable(enable: Boolean) {
+                Log.e("test", "onPullEnable" + "---" + enable)
+            }
+
+            override fun onPullDistance(distance: Int) {
+                Log.e("test", "onPullEnable" + "---" + distance)
+            }
+        })
+
+        swrl_newslist.setOnPushLoadMoreListener(object : SuperSwipeRefreshLayout.OnPushLoadMoreListener {
+            override fun onLoadMore() {
+                Log.e("test", "onLoadMore")
+                mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
+            }
+
+            override fun onPushDistance(distance: Int) {
+                Log.e("test", "onPushDistance" + "---" + distance)
+            }
+
+            override fun onPushEnable(enable: Boolean) {
+                Log.e("test", "onPushEnable" + "---" + enable)
+            }
+
+        })*/
+    }
+
+
+    private var mHandler: Handler? = @SuppressLint("HandlerLeak")
+    object : Handler() {
+
+        override fun handleMessage(msg: Message) {
+            when (msg?.what) {
+               /* 0 -> {
+                    if (swrl_newslist!=null && swrl_newslist.isRefreshing)
+                        (swrl_newslist as SuperSwipeRefreshLayout).setrefre(false)
+
+                }
+
+                1 -> {
+                    if (swrl_newslist!=null)
+                        (swrl_newslist as SuperSwipeRefreshLayout).setLoadMore(false)
+
+                }*/
+            }
+        }
+    }
+
 //扩展函数
- //   fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    //   fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
 }

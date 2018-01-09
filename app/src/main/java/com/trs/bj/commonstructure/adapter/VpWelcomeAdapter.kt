@@ -21,7 +21,7 @@ class VpWelcomeAdapter : PagerAdapter{
     constructor(context: Context) {
         this.context = context
     }
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view==`object`
     }
 
@@ -29,7 +29,7 @@ class VpWelcomeAdapter : PagerAdapter{
         return welcome_image_array.size
     }
 
-    override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
 /*        val view = View.inflate(context, R.layout.vp_item_welcome, null)
         val iv_welcome_item = view.findViewById<ImageView>(R.id.iv_welcome_item)
         iv_welcome_item.setImageResource(welcome_image_array[position])*/
@@ -56,7 +56,7 @@ class VpWelcomeAdapter : PagerAdapter{
         return view
     }
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         if (`object` is View)
             container!!.removeView(`object`)
     }
