@@ -89,11 +89,11 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     private static final int CIRCLE_BG_LIGHT = 0xFFFAFAFA;
     // Default offset in dips from the top of the view to where the progress spinner should stop
     private static final int DEFAULT_CIRCLE_TARGET = 64;
-
+    //内部嵌套的控件对象，比如listview、recyclerview
     private View mTarget; // the target of the gesture
     SuperSwipeRefreshLayout.OnRefreshListener mListener;
     boolean mRefreshing = false;
-    private int mTouchSlop;
+    private int mTouchSlop;        //触发移动事件的最小距离
     private float mTotalDragDistance = -1;
 
     // If nested scrolling is enabled, the total amount that needed to be
@@ -107,10 +107,11 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     private boolean mNestedScrollInProgress;
 
     private int mMediumAnimationDuration;
+    //circleview顶部的位置
     int mCurrentTargetOffsetTop;
 
-    private float mInitialMotionY;
-    private float mInitialDownY;
+    private float mInitialMotionY; //= mInitialDownY + mTouchSlop;
+    private float mInitialDownY; //触摸Down时间的Y坐标
     private boolean mIsBeingDragged;
     private int mActivePointerId = INVALID_POINTER;
     // Whether this item is scaled up rather than clipped
@@ -317,19 +318,23 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
      */
     public SuperSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        //触发移动事件的最小距离
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
         mMediumAnimationDuration = getResources().getInteger(
                 android.R.integer.config_mediumAnimTime);
-
+        //控件是否是自己进行绘制
+        // 设置为true-WILL_NOT_DRAW，onDraw方法不会被调用
+        // 设置为false-去掉其WILL_NOT_DRAW flag，重写onDraw方法
         setWillNotDraw(false);
         mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
 
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
+        //设置圆的半径
         mCircleDiameter = (int) (CIRCLE_DIAMETER * metrics.density);
 
         createProgressView();
+        //按照顺序绘制子控件，设置为true会调用getChildDrawingOrder()
         ViewCompat.setChildrenDrawingOrderEnabled(this, true);
         // the absolute offset has to take into account that the circle starts at an offset
         mSpinnerOffsetEnd = (int) (DEFAULT_CIRCLE_TARGET * metrics.density);
@@ -341,24 +346,28 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
 
         mOriginalOffsetTop = mCurrentTargetOffsetTop = -mCircleDiameter;
         moveToStart(1.0f);
-
+        //TypedArray是存储资源数组的容器，他可以通过obtaiStyledAttributes()方法创建出来。
+        // 创建完后，如果不在使用了，请注意调用recycle()方法把它释放。
         final TypedArray a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
         setEnabled(a.getBoolean(0, true));
         a.recycle();
     }
-
+//继承自viewgroup，第i次应该绘制哪个子View
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
-        if (mCircleViewIndex < 0) {
+        if (mCircleViewIndex < 0) {  //未添加circleview，索引为初始值-1
             return i;
         } else if (i == childCount - 1) {
             // Draw the selected child last
+            //circleview最后绘制
             return mCircleViewIndex;
         } else if (i >= mCircleViewIndex) {
             // Move the children after the selected child earlier one
+            //index比circleview大的提前一个绘制
             return i + 1;
         } else {
             // Keep the children before the selected child the same
+            //index比circleview小的按原有顺序绘制
             return i;
         }
     }
@@ -622,6 +631,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleViewIndex = -1;
         // Get the index of the circleview.
         for (int index = 0; index < getChildCount(); index++) {
+        //对circleview的index进行赋值
             if (getChildAt(index) == mCircleView) {
                 mCircleViewIndex = index;
                 break;
@@ -645,9 +655,11 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
      */
     public boolean canChildScrollUp() {
         if (mChildScrollUpCallback != null) {
+            // TODO: 参考canScrollList 实现mChildScrollUpCallback 重写canChildScrollUp 让mtarget到顶部时仍旧能被下拉 但怎么恢复呢？
             return mChildScrollUpCallback.canChildScrollUp(this, mTarget);
         }
         if (mTarget instanceof ListView) {
+             //direction 负数：检查是否可以向上滑动 正数：检查是否可以向下滑动
             return ListViewCompat.canScrollList((ListView) mTarget, -1);
         }
         return mTarget.canScrollVertically(-1);
@@ -667,7 +679,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         ensureTarget();
 
-        final int action = ev.getActionMasked();
+        final int action = ev.getActionMasked();//没有pointer index 的信息
         int pointerIndex;
 
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
@@ -893,13 +905,16 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
 
         float dragPercent = Math.min(1f, Math.abs(originalDragPercent));
         float adjustedPercent = (float) Math.max(dragPercent - .4, 0) * 5 / 3;
+        //最大拖拽距离之外的位移
         float extraOS = Math.abs(overscrollTop) - mTotalDragDistance;
+        //获取总位移，mUsingCustomStart 是否有自定义的起始位置，如果有，就减去起始的偏移量
         float slingshotDist = mUsingCustomStart ? mSpinnerOffsetEnd - mOriginalOffsetTop
                 : mSpinnerOffsetEnd;
-        float tensionSlingshotPercent = Math.max(0, Math.min(extraOS, slingshotDist * 2)
-                / slingshotDist);
-        float tensionPercent = (float) ((tensionSlingshotPercent / 4) - Math.pow(
-                (tensionSlingshotPercent / 4), 2)) * 2f;
+        //当弹簧效果位移小余0时，tensionSlingshotPercent为0，否则取（弹簧最大拖拽距离之外的位移）与（总位移）的比值，最大为2
+        float tensionSlingshotPercent = Math.max(0, Math.min(extraOS, slingshotDist * 2) / slingshotDist);
+        //pow(x,y); 计算x的y次方
+        float tensionPercent = (float) ((tensionSlingshotPercent / 4) - Math.pow((tensionSlingshotPercent / 4), 2)) * 2f;
+        //弹力距离
         float extraMove = (slingshotDist) * tensionPercent * 2;
 
         int targetY = mOriginalOffsetTop + (int) ((slingshotDist * dragPercent) + extraMove);
@@ -935,7 +950,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mProgress.setProgressRotation(rotation);
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
     }
-
+    //结束下拉列表
     private void finishSpinner(float overscrollTop) {
         if (overscrollTop > mTotalDragDistance) {
             setRefreshing(true, true /* notify */);
@@ -1053,7 +1068,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             mProgress.setAlpha(STARTING_PROGRESS_ALPHA);
         }
     }
-
+    //开始刷新的时候让circleview从拖拽距离之外
     private void animateOffsetToCorrectPosition(int from, Animation.AnimationListener listener) {
         mFrom = from;
         mAnimateToCorrectPosition.reset();
@@ -1065,7 +1080,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleView.clearAnimation();
         mCircleView.startAnimation(mAnimateToCorrectPosition);
     }
-
+    //finishspinner时调用
     private void animateOffsetToStartPosition(int from, Animation.AnimationListener listener) {
         if (mScale) {
             // Scale the item back down
@@ -1140,14 +1155,15 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCurrentTargetOffsetTop = mCircleView.getTop();
     }
 
+    //如果只剩两根手指触摸屏幕，当其中一根手指离开屏幕时
     private void onSecondaryPointerUp(MotionEvent ev) {
         final int pointerIndex = ev.getActionIndex();
-        final int pointerId = ev.getPointerId(pointerIndex);
-        if (pointerId == mActivePointerId) {
+        final int pointerId = ev.getPointerId(pointerIndex); //获取当前离开屏幕的触摸点的id和index
+        if (pointerId == mActivePointerId) {  //如果当前离开屏幕的触摸点id刚好是当前活动的触摸点，那么获取另外一个点的index，通过index获取id
             // This was our active pointer going up. Choose a new
             // active pointer and adjust accordingly.
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mActivePointerId = ev.getPointerId(newPointerIndex);
+            mActivePointerId = ev.getPointerId(newPointerIndex); //将剩下的那个触摸点设为活动的触摸点
         }
     }
 
