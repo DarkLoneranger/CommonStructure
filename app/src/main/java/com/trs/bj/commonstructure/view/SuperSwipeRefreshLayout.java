@@ -695,9 +695,10 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false;
         }
-
+        //如果是正在刷新中或是加载中列表不能点击
+        if (mRefreshing) return true;
         if (!isEnabled() || mReturningToStart || canChildScrollUp()
-                || mRefreshing || mNestedScrollInProgress) {
+                || mNestedScrollInProgress) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
         }
@@ -1000,13 +1001,13 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     public boolean onTouchEvent(MotionEvent ev) {
         final int action = ev.getActionMasked();
         int pointerIndex = -1;
-
+        //如果是正在刷新中或是加载中列表不能点击
+        if (mRefreshing) return true;
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false;
         }
-
         if (!isEnabled() || mReturningToStart || canChildScrollUp()
-                || mRefreshing || mNestedScrollInProgress) {
+                || mNestedScrollInProgress) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
         }
