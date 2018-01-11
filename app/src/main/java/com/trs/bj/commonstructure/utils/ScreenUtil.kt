@@ -28,7 +28,20 @@ class ScreenUtil{
                 return 0
             }
         }
+
+        fun px2dp(context: Context, pxValue: Float): Int {
+            val scale = context.resources.displayMetrics.density
+            return (pxValue / scale + 0.5f).toInt()
+        }
+
+        fun dp2px(context: Context, dipValue: Float): Int {
+            val scale = context.resources.displayMetrics.density
+            return (dipValue * scale + 0.5f).toInt()
+        }
     }
+
+
+
   /*  public static int getScreenHeight(Context context)
     {
         WindowManager wm =(WindowManager) context

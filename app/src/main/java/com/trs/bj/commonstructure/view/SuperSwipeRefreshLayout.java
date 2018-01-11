@@ -17,7 +17,6 @@ import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.ListViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -27,6 +26,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
+import com.trs.bj.commonstructure.utils.ScreenUtil;
 
 /**
  * Created by ZHAO on 2018/1/9.
@@ -106,10 +107,16 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     private final int[] mParentOffsetInWindow = new int[2];
     private boolean mNestedScrollInProgress;
 
+    //刷新头部的模式
+    private int spinnerMode = CO_SLIDE_MODE;
+    private static final int LAYER_MODE = 0;  //浮层模式
+    private static final int CO_SLIDE_MODE = 1;  //协同滑动模式
+
     private int mMediumAnimationDuration;
     //circleview顶部的位置
     int mCurrentTargetOffsetTop;
-
+    //内部嵌套的控件的初始内边距
+    private int mTargetInitialPaddingTop = 0;
     private float mInitialMotionY; //= mInitialDownY + mTouchSlop;
     private float mInitialDownY; //触摸Down时间的Y坐标
     private boolean mIsBeingDragged;
@@ -183,6 +190,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             }
         }
     };
+
 
     void reset() {
         mCircleView.clearAnimation();
@@ -352,7 +360,8 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         setEnabled(a.getBoolean(0, true));
         a.recycle();
     }
-//继承自viewgroup，第i次应该绘制哪个子View
+
+    //继承自viewgroup，第i次应该绘制哪个子View
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         if (mCircleViewIndex < 0) {  //未添加circleview，索引为初始值-1
@@ -597,6 +606,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         }
         if (mTarget == null) {
             ensureTarget();
+            mTargetInitialPaddingTop = mTarget.getPaddingTop();
         }
         if (mTarget == null) {
             return;
@@ -631,7 +641,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleViewIndex = -1;
         // Get the index of the circleview.
         for (int index = 0; index < getChildCount(); index++) {
-        //对circleview的index进行赋值
+            //对circleview的index进行赋值
             if (getChildAt(index) == mCircleView) {
                 mCircleViewIndex = index;
                 break;
@@ -659,7 +669,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             return mChildScrollUpCallback.canChildScrollUp(this, mTarget);
         }
         if (mTarget instanceof ListView) {
-             //direction 负数：检查是否可以向上滑动 正数：检查是否可以向下滑动
+            //direction 负数：检查是否可以向上滑动 正数：检查是否可以向下滑动
             return ListViewCompat.canScrollList((ListView) mTarget, -1);
         }
         return mTarget.canScrollVertically(-1);
@@ -950,6 +960,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mProgress.setProgressRotation(rotation);
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
     }
+
     //结束下拉列表
     private void finishSpinner(float overscrollTop) {
         if (overscrollTop > mTotalDragDistance) {
@@ -1068,6 +1079,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             mProgress.setAlpha(STARTING_PROGRESS_ALPHA);
         }
     }
+
     //开始刷新的时候让circleview从拖拽距离之外
     private void animateOffsetToCorrectPosition(int from, Animation.AnimationListener listener) {
         mFrom = from;
@@ -1080,6 +1092,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleView.clearAnimation();
         mCircleView.startAnimation(mAnimateToCorrectPosition);
     }
+
     //finishspinner时调用
     private void animateOffsetToStartPosition(int from, Animation.AnimationListener listener) {
         if (mScale) {
@@ -1153,7 +1166,15 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleView.bringToFront();
         ViewCompat.offsetTopAndBottom(mCircleView, offset);
         mCurrentTargetOffsetTop = mCircleView.getTop();
+        if (mTarget != null && spinnerMode== CO_SLIDE_MODE) {
+            mTarget.setPadding(0, mCurrentTargetOffsetTop== mOriginalOffsetTop? mTargetInitialPaddingTop : mTargetInitialPaddingTop +mCircleView.getBottom()+ScreenUtil.Companion.dp2px(this.getContext(),10), 0, 0);
+        }
     }
+
+    public void setSpinnerMode(int spinnerMode) {
+        this.spinnerMode = spinnerMode;
+    }
+
 
     //如果只剩两根手指触摸屏幕，当其中一根手指离开屏幕时
     private void onSecondaryPointerUp(MotionEvent ev) {

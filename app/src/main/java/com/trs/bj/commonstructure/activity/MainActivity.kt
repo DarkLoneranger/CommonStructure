@@ -13,6 +13,7 @@ import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
 import com.trs.bj.commonstructure.utils.ToastUtil
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
+import com.trs.bj.commonstructure.view.SuperSwipeRefreshLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -55,36 +56,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRefreshLayout() {
-     /*   swrl_newslist.setOnPullRefreshListener(object : SuperSwipeRefreshLayout.OnPullRefreshListener {
-            override fun onRefresh() {
-                Log.e("test", "onrefresh")
-                mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }
-            }
+     swrl_newslist.setOnRefreshListener{ mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }}
 
-            override fun onPullEnable(enable: Boolean) {
-                Log.e("test", "onPullEnable" + "---" + enable)
-            }
 
-            override fun onPullDistance(distance: Int) {
-                Log.e("test", "onPullEnable" + "---" + distance)
-            }
-        })
+        /*       swrl_newslist.setOnPushLoadMoreListener(object : SuperSwipeRefreshLayout.OnPushLoadMoreListener {
+                override fun onLoadMore() {
+                    Log.e("test", "onLoadMore")
+                    mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
+                }
 
-        swrl_newslist.setOnPushLoadMoreListener(object : SuperSwipeRefreshLayout.OnPushLoadMoreListener {
-            override fun onLoadMore() {
-                Log.e("test", "onLoadMore")
-                mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
-            }
+                override fun onPushDistance(distance: Int) {
+                    Log.e("test", "onPushDistance" + "---" + distance)
+                }
 
-            override fun onPushDistance(distance: Int) {
-                Log.e("test", "onPushDistance" + "---" + distance)
-            }
+                override fun onPushEnable(enable: Boolean) {
+                    Log.e("test", "onPushEnable" + "---" + enable)
+                }
 
-            override fun onPushEnable(enable: Boolean) {
-                Log.e("test", "onPushEnable" + "---" + enable)
-            }
-
-        })*/
+            })*/
     }
 
 
@@ -93,17 +82,17 @@ class MainActivity : AppCompatActivity() {
 
         override fun handleMessage(msg: Message) {
             when (msg?.what) {
-               /* 0 -> {
+              0 -> {
                     if (swrl_newslist!=null && swrl_newslist.isRefreshing)
-                        (swrl_newslist as SuperSwipeRefreshLayout).setrefre(false)
+                        (swrl_newslist as SuperSwipeRefreshLayout).setRefreshing(false)
 
                 }
 
-                1 -> {
-                    if (swrl_newslist!=null)
-                        (swrl_newslist as SuperSwipeRefreshLayout).setLoadMore(false)
+            /*   1 -> {
+                 if (swrl_newslist!=null)
+                     (swrl_newslist as SuperSwipeRefreshLayout).setLoadMore(false)
 
-                }*/
+             }*/
             }
         }
     }
