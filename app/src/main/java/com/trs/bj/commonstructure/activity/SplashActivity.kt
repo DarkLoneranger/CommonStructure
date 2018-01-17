@@ -52,7 +52,8 @@ class SplashActivity : AppCompatActivity() {
                     0 -> {
                         val intent = Intent()
                         //获取intent对象
-                        intent.setClass(outer, MainActivity::class.java)  //内部类引用外部类对象
+                     //   intent.setClass(outer, MainActivity::class.java)  //内部类引用外部类对象
+                        intent.setClass(outer, TestActivity::class.java)  //内部类引用外部类对象
                         // 获取class是使用::反射
                         outer.startActivity(intent)
                         outer.finish()

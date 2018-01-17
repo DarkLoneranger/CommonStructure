@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -524,6 +525,10 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                     return true;
                 }
             }
+        }
+
+        if (mTarget instanceof WebView) {
+            return true;
         }
         return false;
     }
