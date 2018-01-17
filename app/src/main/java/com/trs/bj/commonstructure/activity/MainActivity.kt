@@ -7,10 +7,10 @@ import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.trs.bj.commonstructure.extension.app
-import com.trs.bj.commonstructure.extension.toast
 import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
+import com.trs.bj.commonstructure.extension.app
+import com.trs.bj.commonstructure.extension.toast
 import com.trs.bj.commonstructure.utils.ToastUtil
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
 import com.trs.bj.commonstructure.view.SuperSwipeRefreshLayout
@@ -56,24 +56,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRefreshLayout() {
-     swrl_newslist.setOnRefreshListener{ mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }}
+        swrl_newslist.setOnRefreshListener{ mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }}
+        swrl_newslist.setOnLoadListener {
+            this.toast("开始加载更多")
+         mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
+         }
 
-
-        /*       swrl_newslist.setOnPushLoadMoreListener(object : SuperSwipeRefreshLayout.OnPushLoadMoreListener {
-                override fun onLoadMore() {
-                    Log.e("test", "onLoadMore")
-                    mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
-                }
-
-                override fun onPushDistance(distance: Int) {
-                    Log.e("test", "onPushDistance" + "---" + distance)
-                }
-
-                override fun onPushEnable(enable: Boolean) {
-                    Log.e("test", "onPushEnable" + "---" + enable)
-                }
-
-            })*/
     }
 
 
@@ -88,11 +76,11 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-            /*   1 -> {
+                1 -> {
                  if (swrl_newslist!=null)
-                     (swrl_newslist as SuperSwipeRefreshLayout).setLoadMore(false)
-
-             }*/
+                     (swrl_newslist as SuperSwipeRefreshLayout).setLoading(false)
+                    this@MainActivity.toast("结束加载更多")
+                }
             }
         }
     }

@@ -15,6 +15,8 @@ import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.ListViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -22,11 +24,14 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.trs.bj.commonstructure.R;
 import com.trs.bj.commonstructure.utils.ScreenUtil;
 
 /**
@@ -93,6 +98,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
     //内部嵌套的控件对象，比如listview、recyclerview
     private View mTarget; // the target of the gesture
     SuperSwipeRefreshLayout.OnRefreshListener mListener;
+    SuperSwipeRefreshLayout.OnLoadListener mLoadListener;
     boolean mRefreshing = false;
     private int mTouchSlop;        //触发移动事件的最小距离
     private float mTotalDragDistance = -1;
@@ -190,6 +196,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             }
         }
     };
+    private ImageView mLoadingView;
 
 
     void reset() {
@@ -342,6 +349,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleDiameter = (int) (CIRCLE_DIAMETER * metrics.density);
 
         createProgressView();
+        createLoadingView();
         //按照顺序绘制子控件，设置为true会调用getChildDrawingOrder()
         ViewCompat.setChildrenDrawingOrderEnabled(this, true);
         // the absolute offset has to take into account that the circle starts at an offset
@@ -360,6 +368,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         setEnabled(a.getBoolean(0, true));
         a.recycle();
     }
+
 
     //继承自viewgroup，第i次应该绘制哪个子View
     @Override
@@ -388,6 +397,14 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         mCircleView.setImageDrawable(mProgress);
         mCircleView.setVisibility(View.GONE);
         addView(mCircleView);
+    }
+
+    private void createLoadingView() {
+        mLoadingView = new ImageView(getContext());
+        mLoadingView.setImageResource(R.mipmap.loading_more);
+        mLoadingView.setVisibility(View.GONE);
+        addView(mLoadingView);
+
     }
 
     /**
@@ -420,6 +437,95 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         } else {
             setRefreshing(refreshing, false /* notify */);
         }
+    }
+
+    /**
+     * Set the listener to be notified when a refresh is triggered via the swipe
+     * gesture.
+     */
+    public void setOnLoadListener(SuperSwipeRefreshLayout.OnLoadListener listener) {
+        mLoadListener = listener;
+    }
+
+    public interface OnLoadListener {
+        /**
+         * Called when a swipe gesture triggers a refresh.
+         */
+        void onLoad();
+    }
+
+    /**
+     * Notify the widget that refresh state has changed. Do not call this when
+     * refresh is triggered by a swipe gesture.
+     *
+     * @param loading Whether or not the view should show refresh progress.
+     */
+    boolean mLoading = false;
+
+    public void setLoading(boolean loading) {
+        if (loading && mLoading != loading) {
+            // scale and show
+            mLoading = true;
+            if (mLoadListener != null) {
+                mLoadListener.onLoad();
+            }
+            startLoadingAnimation();
+            return;
+        }
+
+        if (!loading && mLoading != loading) {
+            // scale and show
+            mLoading = false;
+            stopLoadingAnimation();
+        }
+    }
+
+    private void stopLoadingAnimation() {
+        //隐藏底部进度条
+        mLoadingView.setVisibility(View.GONE);
+        mLoadingView.clearAnimation();
+    }
+
+    private void startLoadingAnimation() {
+        //显示底部进度条
+        mLoadingView.bringToFront();
+        mLoadingView.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_more_anim);
+        mLoadingView.startAnimation(animation);
+    }
+
+    private boolean canLoadMore() {
+        if (mTarget instanceof AbsListView && ((AbsListView) mTarget).getLastVisiblePosition() == ((AbsListView) mTarget).getAdapter().getCount() - 1) {
+            return true;
+        }
+
+        if (mTarget instanceof RecyclerView) {
+            RecyclerView.LayoutManager layoutManager = ((RecyclerView) mTarget).getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                int lastCompletelyVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastCompletelyVisibleItemPosition();
+                if (lastCompletelyVisibleItemPosition == ((RecyclerView) mTarget).getAdapter().getItemCount() - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canRefresh() {
+        if (mTarget instanceof AbsListView && ((AbsListView) mTarget).getFirstVisiblePosition() == 0) {
+            return true;
+        }
+
+        if (mTarget instanceof RecyclerView) {
+            RecyclerView.LayoutManager layoutManager = ((RecyclerView) mTarget).getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                int firstCompletelyVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
+                if (firstCompletelyVisibleItemPosition == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void startScaleUpAnimation(Animation.AnimationListener listener) {
@@ -580,7 +686,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         if (mTarget == null) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
-                if (!child.equals(mCircleView)) {
+                if (!child.equals(mCircleView) && !child.equals(mLoadingView)) {
                     mTarget = child;
                     break;
                 }
@@ -621,6 +727,13 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         int circleHeight = mCircleView.getMeasuredHeight();
         mCircleView.layout((width / 2 - circleWidth / 2), mCurrentTargetOffsetTop,
                 (width / 2 + circleWidth / 2), mCurrentTargetOffsetTop + circleHeight);
+
+
+        int loadingWidth = mLoadingView.getMeasuredWidth();
+        int loadingHeight = mLoadingView.getMeasuredHeight();
+        mLoadingView.layout((width / 2 - loadingWidth / 2), height - loadingHeight - ScreenUtil.Companion.dp2px(getContext(), 10),
+                (width / 2 + circleWidth / 2), height - ScreenUtil.Companion.dp2px(getContext(), 10));
+
     }
 
     @Override
@@ -638,6 +751,9 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                 getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY));
         mCircleView.measure(MeasureSpec.makeMeasureSpec(mCircleDiameter, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(mCircleDiameter, MeasureSpec.EXACTLY));
+
+        mLoadingView.measure(MeasureSpec.makeMeasureSpec(ScreenUtil.Companion.dp2px(getContext(), 40), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(ScreenUtil.Companion.dp2px(getContext(), 40), MeasureSpec.EXACTLY));
         mCircleViewIndex = -1;
         // Get the index of the circleview.
         for (int index = 0; index < getChildCount(); index++) {
@@ -665,7 +781,6 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
      */
     public boolean canChildScrollUp() {
         if (mChildScrollUpCallback != null) {
-            // TODO: 参考canScrollList 实现mChildScrollUpCallback 重写canChildScrollUp 让mtarget到顶部时仍旧能被下拉 但怎么恢复呢？
             return mChildScrollUpCallback.canChildScrollUp(this, mTarget);
         }
         if (mTarget instanceof ListView) {
@@ -696,9 +811,10 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
             mReturningToStart = false;
         }
         //如果是正在刷新中或是加载中列表不能点击
-        if (mRefreshing) return true;
-        if (!isEnabled() || mReturningToStart || canChildScrollUp()
-                || mNestedScrollInProgress) {
+        if (mRefreshing || mLoading) return true;
+        //    boolean canChildScrollUp = canChildScrollUp() && !canLoadMore();
+        //    if (!isEnabled() || mReturningToStart || canChildScrollUp || (mNestedScrollInProgress && !canLoadMore())) {
+        if (!isEnabled() || mReturningToStart) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
         }
@@ -726,7 +842,21 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                     return false;
                 }
                 final float y = ev.getY(pointerIndex);
-                startDragging(y);
+                float moveY = y - mInitialDownY;
+                if (moveY > 0) {
+                    if (canChildScrollUp() || mNestedScrollInProgress) return false;
+                    if (canRefresh()) {
+                        startDragging(y);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (canLoadMore()) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
@@ -1002,12 +1132,13 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         final int action = ev.getActionMasked();
         int pointerIndex = -1;
         //如果是正在刷新中或是加载中列表不能点击
-        if (mRefreshing) return true;
+        if (mRefreshing || mLoading) return true;
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false;
         }
-        if (!isEnabled() || mReturningToStart || canChildScrollUp()
-                || mNestedScrollInProgress) {
+        //     boolean canChildScrollUp = canChildScrollUp() && !canLoadMore();
+        //    if (!isEnabled() || mReturningToStart || canChildScrollUp || (mNestedScrollInProgress && !canLoadMore())) {
+        if (!isEnabled() || mReturningToStart) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
         }
@@ -1030,7 +1161,17 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                 if (mIsBeingDragged) {
                     final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
                     if (overscrollTop > 0) {
-                        moveSpinner(overscrollTop);
+                        if (canChildScrollUp() || mNestedScrollInProgress) return false;
+                        if (canRefresh()) {
+                            moveSpinner(overscrollTop);
+                        }else{
+                            return false;
+                        }
+                    }
+                } else {
+                    if (canLoadMore()) {
+                        setLoading(true);
+                        return true;
                     } else {
                         return false;
                     }
