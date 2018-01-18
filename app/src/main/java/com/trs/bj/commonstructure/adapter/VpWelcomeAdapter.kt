@@ -15,7 +15,7 @@ import com.trs.bj.commonstructure.activity.SplashActivity
  * Created by ZHAO on 2017/12/25.
  */
 class VpWelcomeAdapter : PagerAdapter{
-    var welcome_image_array: IntArray = intArrayOf(R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4)
+    var welcome_image_array: IntArray = intArrayOf(R.mipmap.guide_1, R.mipmap.guide_2)
     var context: Context? = null
 
     constructor(context: Context) {

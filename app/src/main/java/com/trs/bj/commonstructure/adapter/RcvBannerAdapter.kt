@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.TextView
 import com.trs.bj.commonstructure.R
+import com.trs.bj.commonstructure.extension.toast
+import com.trs.bj.commonstructure.view.InfiniteViewPagerAdapter
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
 
 /**
@@ -31,12 +33,17 @@ class RcvBannerAdapter : RcvHeaderAdapter {
             ivpBannerAdapter.setData(headerData!!)
             holder.ivp_test!!.adapter= ivpBannerAdapter
          //   holder.ivp_test!!.setCurrentItem(0,true)
+            ivpBannerAdapter.setOnItemClickListener(object :  InfiniteViewPagerAdapter.OnItemClickListener {
+                override fun onItemClick(v: View, position: Int) {
+                        context!!.toast("轮播图点击"+position)
+                }
+            })
         }
     }
 
     override fun onBindItemViewHolder(holder: ItemViewHolder?, position: Int, listData: ArrayList<Any>?) {
         if (holder is BannerItemHolder) {
-            holder.tv_test!!.setText("lalala"+position)
+            holder.tv_test!!.text= listData!![position] as String
         }
     }
 

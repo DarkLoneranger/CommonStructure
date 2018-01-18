@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.trs.bj.commonstructure"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,8 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     //联网  http://square.github.io/retrofit/
     implementation 'com.android.support:support-v4:27.0.2'
+    /*全景图*/
+    compile 'com.google.vr:sdk-panowidget:1.100.0'
 }
 
 apply plugin: 'kotlin-android'

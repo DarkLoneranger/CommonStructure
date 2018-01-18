@@ -23,6 +23,7 @@ class IvpBannerAdapter : InfiniteViewPagerAdapter {
         val view = View.inflate(context, R.layout.iv_test_layout, null)
         val imageView = view.findViewById<ImageView>(R.id.iv_test)
         imageView.setImageResource(dataList!![position] as Int)
+        imageView.scaleType=ImageView.ScaleType.CENTER_CROP
         return view
     }
 

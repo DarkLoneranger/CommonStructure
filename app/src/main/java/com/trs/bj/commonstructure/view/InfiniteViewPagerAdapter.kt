@@ -79,12 +79,26 @@ abstract class InfiniteViewPagerAdapter : PagerAdapter, ViewPager.OnPageChangeLi
             var realPosition = position % dataList!!.size
             var itemView = getItemView(realPosition)
             container!!.addView(itemView)
+            itemView.setOnClickListener{
+                if (clickListener!=null) clickListener!!.onItemClick(itemView, realPosition)
+            }
             return itemView
         }
         return super.instantiateItem(container, position);
 
 
     }
+
+    var clickListener: OnItemClickListener?=null
+
+    fun setOnItemClickListener(clickListener: OnItemClickListener) {
+        this.clickListener = clickListener
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(v: View, position: Int)
+    }
+
 
     fun setData(dataList: ArrayList<Any>) {
         this.dataList = dataList

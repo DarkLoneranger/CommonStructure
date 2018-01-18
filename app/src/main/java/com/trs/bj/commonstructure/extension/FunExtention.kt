@@ -12,7 +12,7 @@ import android.widget.Toast
 fun Context.toast(message: CharSequence) {
     var toast: Toast? = null
     if (toast == null) {
-        toast = Toast.makeText(this, message, Toast.LENGTH_LONG)
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
     }else{
         toast.setText(message)
     }
