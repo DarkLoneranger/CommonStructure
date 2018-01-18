@@ -878,6 +878,93 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         return mIsBeingDragged;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        final int action = ev.getActionMasked();
+        int pointerIndex = -1;
+        //如果是正在刷新中或是加载中列表不能点击
+        if (mRefreshing || mLoading) return true;
+        if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
+            mReturningToStart = false;
+        }
+        //     boolean canChildScrollUp = canChildScrollUp() && !canLoadMore();
+        //    if (!isEnabled() || mReturningToStart || canChildScrollUp || (mNestedScrollInProgress && !canLoadMore())) {
+        if (!isEnabled() || mReturningToStart) {
+            // Fail fast if we're not in a state where a swipe is possible
+            return false;
+        }
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mActivePointerId = ev.getPointerId(0);
+                mIsBeingDragged = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE: {
+                pointerIndex = ev.findPointerIndex(mActivePointerId);
+                if (pointerIndex < 0) {
+                    return false;
+                }
+
+                final float y = ev.getY(pointerIndex);
+                startDragging(y);
+
+                if (mIsBeingDragged) {
+                    final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
+                    if (overscrollTop > 0) {
+                        if (canChildScrollUp() || mNestedScrollInProgress) return false;
+                        if (canRefresh()) {
+                            moveSpinner(overscrollTop);
+                        } else {
+                            return false;
+                        }
+                    }
+                } else {
+                    if (canLoadMore()) {
+                        setLoading(true);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                break;
+            }
+            case MotionEvent.ACTION_POINTER_DOWN: {
+                pointerIndex = ev.getActionIndex();
+                if (pointerIndex < 0) {
+                    return false;
+                }
+                mActivePointerId = ev.getPointerId(pointerIndex);
+                break;
+            }
+
+            case MotionEvent.ACTION_POINTER_UP:
+                onSecondaryPointerUp(ev);
+                break;
+
+            case MotionEvent.ACTION_UP: {
+                pointerIndex = ev.findPointerIndex(mActivePointerId);
+                if (pointerIndex < 0) {
+                    return false;
+                }
+
+                if (mIsBeingDragged) {
+                    final float y = ev.getY(pointerIndex);
+                    final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
+                    mIsBeingDragged = false;
+                    finishSpinner(overscrollTop);
+                }
+                mActivePointerId = INVALID_POINTER;
+                return false;
+            }
+            case MotionEvent.ACTION_CANCEL:
+                return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void requestDisallowInterceptTouchEvent(boolean b) {
         // if this is a List < L or another view that doesn't support nested
@@ -1131,92 +1218,6 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        final int action = ev.getActionMasked();
-        int pointerIndex = -1;
-        //如果是正在刷新中或是加载中列表不能点击
-        if (mRefreshing || mLoading) return true;
-        if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
-            mReturningToStart = false;
-        }
-        //     boolean canChildScrollUp = canChildScrollUp() && !canLoadMore();
-        //    if (!isEnabled() || mReturningToStart || canChildScrollUp || (mNestedScrollInProgress && !canLoadMore())) {
-        if (!isEnabled() || mReturningToStart) {
-            // Fail fast if we're not in a state where a swipe is possible
-            return false;
-        }
-
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mActivePointerId = ev.getPointerId(0);
-                mIsBeingDragged = false;
-                break;
-
-            case MotionEvent.ACTION_MOVE: {
-                pointerIndex = ev.findPointerIndex(mActivePointerId);
-                if (pointerIndex < 0) {
-                    return false;
-                }
-
-                final float y = ev.getY(pointerIndex);
-                startDragging(y);
-
-                if (mIsBeingDragged) {
-                    final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
-                    if (overscrollTop > 0) {
-                        if (canChildScrollUp() || mNestedScrollInProgress) return false;
-                        if (canRefresh()) {
-                            moveSpinner(overscrollTop);
-                        }else{
-                            return false;
-                        }
-                    }
-                } else {
-                    if (canLoadMore()) {
-                        setLoading(true);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-                break;
-            }
-            case MotionEvent.ACTION_POINTER_DOWN: {
-                pointerIndex = ev.getActionIndex();
-                if (pointerIndex < 0) {
-                    return false;
-                }
-                mActivePointerId = ev.getPointerId(pointerIndex);
-                break;
-            }
-
-            case MotionEvent.ACTION_POINTER_UP:
-                onSecondaryPointerUp(ev);
-                break;
-
-            case MotionEvent.ACTION_UP: {
-                pointerIndex = ev.findPointerIndex(mActivePointerId);
-                if (pointerIndex < 0) {
-                    return false;
-                }
-
-                if (mIsBeingDragged) {
-                    final float y = ev.getY(pointerIndex);
-                    final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
-                    mIsBeingDragged = false;
-                    finishSpinner(overscrollTop);
-                }
-                mActivePointerId = INVALID_POINTER;
-                return false;
-            }
-            case MotionEvent.ACTION_CANCEL:
-                return false;
-        }
-
-        return true;
-    }
 
     private void startDragging(float y) {
         final float yDiff = y - mInitialDownY;
