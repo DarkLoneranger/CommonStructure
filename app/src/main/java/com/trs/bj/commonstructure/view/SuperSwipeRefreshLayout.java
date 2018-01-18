@@ -198,6 +198,8 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
         }
     };
     private ImageView mLoadingView;
+    private boolean preparedLoading;
+    private boolean preparedLoading1;
 
 
     void reset() {
@@ -857,7 +859,15 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                     }
                 } else {
                     if (canLoadMore()) {
-                        return true;
+                        if (-moveY > mTouchSlop) {
+                            preparedLoading = true;
+                            mLoadingView.setVisibility(View.VISIBLE);
+                            return true;
+                        } else {
+                            preparedLoading1 = false;
+                            mLoadingView.setVisibility(View.GONE);
+                            return false;
+                        }
                     } else {
                         return false;
                     }
@@ -909,24 +919,32 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
 
                 final float y = ev.getY(pointerIndex);
                 startDragging(y);
-
-                if (mIsBeingDragged) {
-                    final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
-                    if (overscrollTop > 0) {
-                        if (canChildScrollUp() || mNestedScrollInProgress) return false;
-                        if (canRefresh()) {
-                            moveSpinner(overscrollTop);
-                        } else {
-                            return false;
+                float moveY = y - mInitialDownY;
+                if (moveY > 0) {
+                    if (mIsBeingDragged) {
+                        final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
+                        if (overscrollTop > 0) {
+                            if (canChildScrollUp() || mNestedScrollInProgress) return false;
+                            if (canRefresh()) {
+                                moveSpinner(overscrollTop);
+                            } else {
+                                return false;
+                            }
                         }
                     }
                 } else {
-                    if (canLoadMore()) {
-                        setLoading(true);
-                        return true;
-                    } else {
-                        return false;
+                    if (preparedLoading) {
+                        if (-moveY > mTouchSlop) {
+                            preparedLoading = true;
+                            mLoadingView.setVisibility(View.VISIBLE);
+                            return true;
+                        } else {
+                            preparedLoading = false;
+                            mLoadingView.setVisibility(View.GONE);
+                            return false;
+                        }
                     }
+                    return false;
                 }
                 break;
             }
@@ -944,6 +962,9 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                 break;
 
             case MotionEvent.ACTION_UP: {
+                if (preparedLoading) {
+                    setLoading(true);
+                }
                 pointerIndex = ev.findPointerIndex(mActivePointerId);
                 if (pointerIndex < 0) {
                     return false;
