@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val headerList: ArrayList<Any>? = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2)
-    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "待定", "待定", "待定", "待定")
+    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "待定", "待定", "待定")
     var rcvBannerAdapter: RcvBannerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +52,14 @@ class MainActivity : AppCompatActivity() {
                             val intent = Intent()
                             //获取intent对象
                             intent.setClass(this@MainActivity, PanoramaActivity::class.java)  //内部类引用外部类对象
+                            // 获取class是使用::反射
+                            this@MainActivity.startActivity(intent)
+                        }
+                        1 -> {
+                            //球体映射测试  https://github.com/wlseu/OpenGLESTutorial
+                            val intent = Intent()
+                            //获取intent对象
+                            intent.setClass(this@MainActivity, TutorialPartI::class.java)  //内部类引用外部类对象
                             // 获取class是使用::反射
                             this@MainActivity.startActivity(intent)
                         }
