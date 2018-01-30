@@ -17,9 +17,7 @@ public class Sphere {
     public float angleY = 0;
     // The colors mapped to the vertices.
     float[] colors = { 0f, 0f, 0f, 1f, 0f, 0f, 1f, 1f, 0f, 1f, 0f, 1f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 1f, 1f, 0f, 1f, 1f,
-                    1f, 1f, 0f, 1f, 1f, 1f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 0f, 1f, 0f, 0f, 1f, 1f, 1f, 0f, 1f, 1f
-
-    };
+                    1f, 1f, 0f, 1f, 1f, 1f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 0f, 1f, 0f, 0f, 1f, 1f, 1f, 0f, 1f, 1f};
     private FloatBuffer colorBuffer;
 
     public void draw(GL10 gl) {

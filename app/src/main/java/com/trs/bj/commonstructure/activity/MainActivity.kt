@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val headerList: ArrayList<Any>? = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2)
-    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "待定", "待定", "待定")
+    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "字体测试", "待定", "待定")
     var rcvBannerAdapter: RcvBannerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +64,15 @@ class MainActivity : AppCompatActivity() {
                             this@MainActivity.startActivity(intent)
                         }
 
+                        2 -> {
+                            //字体测试
+                            val intent = Intent()
+                            //获取intent对象
+                            intent.setClass(this@MainActivity, FontTestActivity::class.java)  //内部类引用外部类对象
+                            // 获取class是使用::反射
+                            this@MainActivity.startActivity(intent)
+                        }
+
                     }
 
                 }
@@ -105,6 +114,7 @@ class MainActivity : AppCompatActivity() {
                      (swrl_newslist as SuperSwipeRefreshLayout).setLoading(false)
                     this@MainActivity.toast("结束加载更多")
                 }
+
             }
         }
     }

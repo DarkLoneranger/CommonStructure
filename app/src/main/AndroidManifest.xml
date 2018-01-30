@@ -10,7 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
         <activity
             android:name=".activity.TestActivity"
             android:label="@string/title_activity_test"
@@ -28,8 +27,9 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.PanoramaActivity"></activity>
+        <activity android:name=".activity.PanoramaActivity" />
         <activity android:name=".activity.TutorialPartI" />
+        <activity android:name=".activity.FontTestActivity"></activity>
     </application>
 
 </manifest>
