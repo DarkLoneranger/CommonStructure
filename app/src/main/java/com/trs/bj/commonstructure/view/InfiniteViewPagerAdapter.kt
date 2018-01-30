@@ -37,17 +37,17 @@ abstract class InfiniteViewPagerAdapter : PagerAdapter, ViewPager.OnPageChangeLi
     }
 
     override fun onPageSelected(position: Int) {
-        Log.e("test", "onPageSelected" + position)
+      //  Log.e("test", "onPageSelected" + position)
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        Log.e("test", "onPageScrolled" + position + "--" + positionOffset + "--" + positionOffsetPixels)
+      //  Log.e("test", "onPageScrolled" + position + "--" + positionOffset + "--" + positionOffsetPixels)
     }
 
     open  var shownDuration : Long = 3000
 
     override fun onPageScrollStateChanged(state: Int) {
-        Log.e("test", "onPageScrollStateChanged" + state)
+     //   Log.e("test", "onPageScrollStateChanged" + state)
         when (state) {
             ViewPager.SCROLL_STATE_IDLE -> {
                 handler.sendEmptyMessageDelayed(0, shownDuration )
