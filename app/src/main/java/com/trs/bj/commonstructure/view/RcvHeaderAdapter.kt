@@ -103,13 +103,15 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     /**
      * 刷新列表数据
      */
-    fun refreshListData(listData: ArrayList<Any>) {
+    fun refreshListData(dataList: ArrayList<Any>) {
         if (this.listData == null) {
             this.listData = ArrayList<Any>()
         }
         this.listData?.clear()
-            this.listData = listData
-        notifyItemRangeChanged(1, listData.size)
+        if (dataList != null && dataList.size>0) {
+            this.listData!!.addAll(dataList)
+            notifyItemRangeChanged(1, this.listData!!.size)
+        }
         //positionStart Position of the first item that has changed
         //itemCount Number of items that have changed
     }
@@ -117,12 +119,14 @@ abstract class RcvHeaderAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> 
     /**
      * 添加列表数据
      */
-    fun addListData(listData: ArrayList<Any>) {
+    fun addListData(dataList: ArrayList<Any>) {
         if (this.listData == null) {
             this.listData = ArrayList<Any>()
         }
-            this.listData?.addAll(listData)
-        notifyItemRangeChanged(1, listData.size)
+        if (dataList != null && dataList.size > 0) {
+            this.listData?.addAll(dataList)
+            notifyItemRangeChanged(1, this.listData!!.size)
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
 import com.trs.bj.commonstructure.extension.toast
 import com.trs.bj.commonstructure.view.RcvHeaderAdapter
 import com.trs.bj.commonstructure.view.SuperSwipeRefreshLayout
+import com.trs.bj.commonstructure.view.WrapContentLinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         //   rcv_header.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false) //最后一个参数表示是否从后往前
         //   rcv_header.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true) //最后一个参数表示是否从后往前
-        rcv_header.layoutManager = LinearLayoutManager(this) //最后一个参数表示是否从后往前
+        rcv_header.layoutManager = WrapContentLinearLayoutManager(this) //最后一个参数表示是否从后往前
         rcvBannerAdapter = RcvBannerAdapter(this)
         rcv_header.adapter = rcvBannerAdapter
         rcvBannerAdapter?.let {
@@ -93,15 +94,16 @@ class MainActivity : AppCompatActivity() {
     private fun initRefreshLayout() {
         swrl_newslist.setOnRefreshListener {
             rcvBannerAdapter?.let {
-                it.refreshListData(dataList!!)
+                val dataList1 = dataList!!
+                it.refreshListData(dataList1)
             }
-            mHandler?.let { it.sendEmptyMessageDelayed(0, 5000) }
+            mHandler?.let { it.sendEmptyMessageDelayed(0, 2000) }
         }
         swrl_newslist.setOnLoadListener {
             rcvBannerAdapter?.let {
                 it.addListData(dataList!!)
             }
-            mHandler?.let { it.sendEmptyMessageDelayed(1, 5000) }
+            mHandler?.let { it.sendEmptyMessageDelayed(1, 2000) }
          }
 
     }
