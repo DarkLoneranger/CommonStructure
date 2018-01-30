@@ -49,7 +49,7 @@ class RotateProductActivity : AppCompatActivity() {
                        for (j in 1..rotateCount.toInt()){
                            val i1 = currentImageIndex!!.plus(1)
                            currentImageIndex = if (i1 == images!!.size) 0 else i1
-                           mHandler?.let { it.sendEmptyMessageDelayed(currentImageIndex!!.toInt(), 1) }
+                           mHandler?.let { it.sendEmptyMessageDelayed(currentImageIndex!!.toInt(), 2) }
                        }
                         return@setOnTouchListener true
                     }
@@ -60,7 +60,7 @@ class RotateProductActivity : AppCompatActivity() {
                         for (j in 1..rotateCount.toInt()) {
                             val i1 = currentImageIndex!!.minus(1)
                             currentImageIndex = if (i1 == -1) images!!.size - 1 else i1
-                            mHandler?.let { it.sendEmptyMessageDelayed(currentImageIndex!!.toInt(), 1) }
+                            mHandler?.let { it.sendEmptyMessageDelayed(currentImageIndex!!.toInt(), 2) }
 
                         }
                         return@setOnTouchListener true
