@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.trs.bj.commonstructure.R
 import com.trs.bj.commonstructure.adapter.RcvBannerAdapter
@@ -18,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val headerList: ArrayList<Any>? = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2)
-    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "字体测试", "360产品展示", "待定")
+    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "字体测试", "360产品展示", "水波纹进度展示")
     var rcvBannerAdapter: RcvBannerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                     when (position % dataList.size) {
                         0 -> {
                             //全景图测试
+                            //图片取自微博 麦田里的草帽人
                             val intent = Intent()
                             //获取intent对象
                             intent.setClass(this@MainActivity, PanoramaActivity::class.java)  //内部类引用外部类对象
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                             //球体映射测试  https://github.com/wlseu/OpenGLESTutorial
                             val intent = Intent()
                             //获取intent对象
-                            intent.setClass(this@MainActivity, TutorialPartI::class.java)  //内部类引用外部类对象
+                            intent.setClass(this@MainActivity, SphericalMappingActivity::class.java)  //内部类引用外部类对象
                             // 获取class是使用::反射
                             this@MainActivity.startActivity(intent)
                         }
@@ -75,10 +75,19 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         3 -> {
-                            //字体测试
+                            //产品360度旋转 图片源自《故宫陶瓷馆》苹果端
                             val intent = Intent()
                             //获取intent对象
                             intent.setClass(this@MainActivity, RotateProductActivity::class.java)  //内部类引用外部类对象
+                            // 获取class是使用::反射
+                            this@MainActivity.startActivity(intent)
+                        }
+
+                        4 -> {
+                            //水波纹测试 https://github.com/githubwing/WaveLoadingView
+                            val intent = Intent()
+                            //获取intent对象
+                            intent.setClass(this@MainActivity, WaveLoadingActivity::class.java)  //内部类引用外部类对象
                             // 获取class是使用::反射
                             this@MainActivity.startActivity(intent)
                         }

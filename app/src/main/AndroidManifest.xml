@@ -28,9 +28,10 @@
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.PanoramaActivity" />
-        <activity android:name=".activity.TutorialPartI" />
+        <activity android:name=".activity.SphericalMappingActivity" />
         <activity android:name=".activity.FontTestActivity" />
-        <activity android:name=".activity.RotateProductActivity"></activity>
+        <activity android:name=".activity.RotateProductActivity" />
+        <activity android:name=".activity.WaveLoadingActivity"></activity>
     </application>
 
 </manifest>
