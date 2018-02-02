@@ -27,6 +27,7 @@ class RotateProductActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rotate_product)
+        //屏幕从头到尾横向滑动的距离能让产品转几圈
         mTouchSlop = ScreenUtil.getScreenWidth(this) / (images!!.size*8)
         iv_rotate.setOnTouchListener {
             v, event ->
