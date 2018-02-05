@@ -31,7 +31,8 @@
         <activity android:name=".activity.SphericalMappingActivity" />
         <activity android:name=".activity.FontTestActivity" />
         <activity android:name=".activity.RotateProductActivity" />
-        <activity android:name=".activity.WaveLoadingActivity"></activity>
+        <activity android:name=".activity.WaveLoadingActivity" />
+        <activity android:name=".activity.BezierPathActivity"></activity>
     </application>
 
 </manifest>

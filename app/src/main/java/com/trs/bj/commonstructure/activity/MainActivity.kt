@@ -17,7 +17,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val headerList: ArrayList<Any>? = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2)
-    val dataList: ArrayList<Any>? = arrayListOf("全景图测试", "球体映射", "字体测试", "360产品展示", "水波纹进度展示")
+    val dataList: ArrayList<Any>? = arrayListOf(
+    "全景图测试", "球体映射", "字体测试", "360产品展示", "水波纹进度展示",
+    "贝塞尔曲线路径测试")
     var rcvBannerAdapter: RcvBannerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +90,15 @@ class MainActivity : AppCompatActivity() {
                             val intent = Intent()
                             //获取intent对象
                             intent.setClass(this@MainActivity, WaveLoadingActivity::class.java)  //内部类引用外部类对象
+                            // 获取class是使用::反射
+                            this@MainActivity.startActivity(intent)
+                        }
+
+                        5 -> {
+                            //贝塞尔曲线路径测试  https://github.com/azhengyongqin/CustomAnimationFramework
+                            val intent = Intent()
+                            //获取intent对象
+                            intent.setClass(this@MainActivity, BezierPathActivity::class.java)  //内部类引用外部类对象
                             // 获取class是使用::反射
                             this@MainActivity.startActivity(intent)
                         }
