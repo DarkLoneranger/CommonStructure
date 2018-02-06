@@ -66,6 +66,21 @@ public class ReflectionTestJavaActivity extends AppCompatActivity {
          java.lang.NoSuchMethodException: setPosition [int]
         */
 
+        /*
+        * https://discuss.kotlinlang.org/t/how-do-extension-functions-work/609
+        *
+        * As the docs say: "Extension functions are resolved statically", i.e. they are normal static methods
+        * bearing no connection with the class they are extending, other than taking an instance of this class
+        * as a parameters.
+        * http://confluence.jetbrains.com/display/Kotlin/Extension
+        *
+        * So, this is just a trick the Kotlin compiler is playing without actually modifying the targeted class?
+        * There's no way to address the extension function through reflection or from Java code?
+        *
+        * The target classes are not modified. Extensions are visible from Java reflection as static methods
+        * in the classes they are defined in (.i.e. in package-classes for top-level extension functions).
+        * */
+
 
 
 

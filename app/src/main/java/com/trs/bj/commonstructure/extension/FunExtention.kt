@@ -43,7 +43,7 @@ fun Context.app():Context{
         Log.e("test","newPosition")
     }*/
 
-    var View.newPosition: Int
+    var View.newPosition: Int  //不能有初始值
     get():Int {
         return newPosition
     }
@@ -51,9 +51,50 @@ fun Context.app():Context{
         this.newPosition=value
         Log.e("test","newPosition"+newPosition)
     }
-
+/*A property with a backing field will store the value in the form of a field.
+* A property without a backing field will have to store their value in other ways than directly storing it in memory.
+* Note that, since extensions do not actually insert members into classes, there's no efficient way for an extension
+* property to have a backing field. This is why initializers are not allowed for extension properties. */
 
 fun View.setPosition(value:Int ){
     Log.e("test", "Position" + value)
 }
+
+
+/*
+==========================
+open class C
+
+class D: C()
+
+fun C.foo() = "c"
+
+fun D.foo() = "d"
+
+fun printFoo(c: C) {
+    println(c.foo())
+}
+
+printFoo(D())
+it will print"c"
+==========================
+class C {
+    fun foo() { println("member") }
+}
+
+fun C.foo() { println("extension") }
+If we call c.foo() of any c of type C, it will print "member", not "extension".
+==========================
+class C {
+    fun foo() { println("member") }
+}
+
+fun C.foo(i: Int) { println("extension") }
+可以重载
+The call to C().foo(1) will print "extension".
+==========================
+
+
+
+*/
 
