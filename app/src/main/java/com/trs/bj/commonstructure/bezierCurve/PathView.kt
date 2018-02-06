@@ -38,10 +38,12 @@ class PathView: View{
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        path.moveTo(60f, 60f)
-        path.lineTo(460f, 460f)
-        path.quadTo(660f, 260f, 860f, 460f) //订单
-        path.cubicTo(160f, 660f, 960f, 1060f, 260f, 1260f)
+        path?.let {
+          it.moveTo(20f, 20f)
+     //      it.lineTo(460f, 460f)
+            it.quadTo(200f, 200f, 0f, 400f) //订单
+         //   it.cubicTo(160f, 660f, 960f, 1060f, 260f, 1260f)
+        }
         canvas!!.drawPath(path, paint)
 
     }

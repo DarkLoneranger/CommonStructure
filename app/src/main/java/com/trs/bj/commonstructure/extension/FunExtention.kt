@@ -1,6 +1,8 @@
 package com.trs.bj.commonstructure.extension
 
 import android.content.Context
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 
 /**
@@ -22,5 +24,36 @@ fun Context.toast(message: CharSequence) {
 
 fun Context.app():Context{
    return this.applicationContext
+}
+
+/**
+ * 设置View的属性通过ObjectAnimator.ofObject()的反射机制来调用
+ * @param newLoc
+ */
+
+
+/*var View.newPosition: PathPoint
+    get():PathPoint {
+        return newPosition
+    }
+    set(value) {
+        this.newPosition=value
+        this.setTranslationX(value.mX)
+        this.setTranslationY(value.mY)
+        Log.e("test","newPosition")
+    }*/
+
+    var View.newPosition: Int
+    get():Int {
+        return newPosition
+    }
+    set(value) {
+        this.newPosition=value
+        Log.e("test","newPosition"+newPosition)
+    }
+
+
+fun View.setPosition(value:Int ){
+    Log.e("test", "Position" + value)
 }
 

@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     val headerList: ArrayList<Any>? = arrayListOf(R.mipmap.guide_1, R.mipmap.guide_2)
     val dataList: ArrayList<Any>? = arrayListOf(
     "全景图测试", "球体映射", "字体测试", "360产品展示", "水波纹进度展示",
-    "贝塞尔曲线路径测试")
+    "贝塞尔曲线路径测试","JAVA反射获取扩展函数测试")
     var rcvBannerAdapter: RcvBannerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,6 +103,15 @@ class MainActivity : AppCompatActivity() {
                             this@MainActivity.startActivity(intent)
                         }
 
+                        6 -> {
+                            //JAVA反射获取扩展函数测试
+                            val intent = Intent()
+                            //获取intent对象
+                            intent.setClass(this@MainActivity, ReflectionTestJavaActivity::class.java)  //内部类引用外部类对象
+                            // 获取class是使用::反射
+                            this@MainActivity.startActivity(intent)
+                        }
+
                     }
 
                 }
@@ -119,12 +128,12 @@ class MainActivity : AppCompatActivity() {
             }
             mHandler?.let { it.sendEmptyMessageDelayed(0, 2000) }
         }
-        swrl_newslist.setOnLoadListener {
+      /*  swrl_newslist.setOnLoadListener {
             rcvBannerAdapter?.let {
                 it.addListData(dataList!!)
             }
             mHandler?.let { it.sendEmptyMessageDelayed(1, 2000) }
-         }
+         }*/
 
     }
 

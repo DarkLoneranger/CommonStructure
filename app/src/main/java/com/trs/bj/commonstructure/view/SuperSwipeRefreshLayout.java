@@ -858,7 +858,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                         return false;
                     }
                 } else {
-                    if (canLoadMore()) {
+                    if (canLoadMore() && (mLoadListener!=null)) {
                         if (-moveY > mTouchSlop) {
                             preparedLoading = true;
                             mLoadingView.setVisibility(View.VISIBLE);
@@ -933,7 +933,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup implements NestedScrollin
                         }
                     }
                 } else {
-                    if (preparedLoading) {
+                    if (preparedLoading && (mLoadListener != null) ) {
                         if (-moveY > mTouchSlop) {
                             preparedLoading = true;
                             mLoadingView.setVisibility(View.VISIBLE);

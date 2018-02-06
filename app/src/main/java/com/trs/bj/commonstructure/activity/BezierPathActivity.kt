@@ -2,6 +2,7 @@ package com.trs.bj.commonstructure.activity
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_bezier_path.*
 class BezierPathActivity : AppCompatActivity() ,View.OnClickListener{
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btn_bezier -> startAnimatorPath(btn_bezier, "fab", path!!)
+            R.id.btn_bezier -> startAnimatorPath(btn_bezier, "newPosition", path!!)
         }
     }
 
@@ -33,10 +34,10 @@ class BezierPathActivity : AppCompatActivity() ,View.OnClickListener{
     fun setPath() {
         path = AnimatorPath()
         path?.let {
-            it.moveTo(0f, 0f)
-            it.lineTo(400f, 400f)
-            it.secondBesselCurveTo(600f, 200f, 800f, 400f) //订单
-            it.thirdBesselCurveTo(100f, 600f, 900f, 1000f, 200f, 1200f)
+           it.moveTo(20f, 20f)
+         //   it.lineTo(400f, 400f)
+            it.secondBesselCurveTo(200f, 200f, 0f, 400f) //订单
+         //   it.thirdBesselCurveTo(100f, 600f, 900f, 1000f, 200f, 1200f)
          }
     }
 
@@ -47,6 +48,7 @@ class BezierPathActivity : AppCompatActivity() ,View.OnClickListener{
      * @param path 动画路径集合
      */
     private fun startAnimatorPath(view: View, propertyName: String, path: AnimatorPath) {
+        //propertyName属性设置的参数为TypeEvaluator中endValue的类型，属性不存在时需要添加set方法
         val anim = ObjectAnimator.ofObject(this, propertyName, PathEvaluator(), *path.points.toTypedArray())
         anim.interpolator = DecelerateInterpolator()
         anim.duration = 3000
@@ -63,8 +65,8 @@ class BezierPathActivity : AppCompatActivity() ,View.OnClickListener{
 
             override fun onAnimationEnd(animation: Animator?) {
                 //动画结束后恢复原位
-                btn_bezier.x=40f
-                btn_bezier.y=40f
+                btn_bezier.x=0f
+                btn_bezier.y=0f
                 btn_bezier.postInvalidate()
             }
 
@@ -75,10 +77,9 @@ class BezierPathActivity : AppCompatActivity() ,View.OnClickListener{
      * 设置View的属性通过ObjectAnimator.ofObject()的反射机制来调用
      * @param newLoc
      */
-    fun setFab(newLoc: PathPoint) {
+    fun setNewPosition(newLoc: PathPoint) {
         btn_bezier.setTranslationX(newLoc.mX)
         btn_bezier.setTranslationY(newLoc.mY)
     }
-
 
 }
