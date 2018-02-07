@@ -34,6 +34,7 @@
         <activity android:name=".activity.WaveLoadingActivity" />
         <activity android:name=".activity.BezierPathActivity" />
         <activity android:name=".activity.ReflectionTestJavaActivity" />
+        <activity android:name=".activity.TransitionAnimationActivity" />
     </application>
 
 </manifest>

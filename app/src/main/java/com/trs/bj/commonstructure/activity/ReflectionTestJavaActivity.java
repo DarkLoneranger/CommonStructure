@@ -1,15 +1,13 @@
 package com.trs.bj.commonstructure.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.trs.bj.commonstructure.R;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ReflectionTestJavaActivity extends AppCompatActivity {
@@ -79,6 +77,34 @@ public class ReflectionTestJavaActivity extends AppCompatActivity {
         *
         * The target classes are not modified. Extensions are visible from Java reflection as static methods
         * in the classes they are defined in (.i.e. in package-classes for top-level extension functions).
+        * */
+
+
+        /*
+        * Extension fucntions and properties are not added to existing class for real. Kotlin compiler
+        * allows you to reference them AS IF they were a part of the class.
+        * If you write in Kotlin a function 'setPosition' in a Kotlin file named 'Funs.kt':
+        * //in file Funs.kt
+        * fun View.setPosition(value: Int) {
+        *       //smth
+        * }
+        * The compiler will make it a FunsKt.class with a static method 'setPosition' inside.
+        * public final class FunsKt {
+        *       public static void setPosition(View $receiver, int value) {
+        *           //smth
+        *       }
+        * }
+        * It is just Kotlin compiler magic that it allows you to use it as if it was a part of the
+        * View class (notice that because of that you cannot access private/protected values
+        * from extension funtions). From java you must use it as it is.
+        *
+        * To obtain Method setPosition do that:
+        * Class c = Class.forName("[your package].[kotlin file name + "Kt"]");
+        * Method m = c.getMethod("setPosition", View.class, int.class);
+        * Extension properties work in a simmilar way. No real variable is created - only two static
+        * methods (getter and setter). These method don't have a real variable in which they store value,
+        * but they calculate this value on the go. You cannot obtain them as a Field object but you can
+        * get them as methods in the very same way as setPosition.
         * */
 
 
