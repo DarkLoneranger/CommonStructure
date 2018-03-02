@@ -11,6 +11,8 @@ import com.trs.bj.commonstructure.utils.ScreenUtil
 import kotlinx.android.synthetic.main.activity_rotate_product.*
 
 class RotateProductActivity : AppCompatActivity() {
+//从xml中获取照片数组
+    var images1: IntArray? = resources.getIntArray(R.array.object_image)
 
     var initX=0.toFloat()
             var images: ArrayList<Int>? = arrayListOf(
